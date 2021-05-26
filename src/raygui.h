@@ -1259,11 +1259,16 @@ bool GuiDropdownBox(Rectangle bounds, int widthBoundsOpen, const char *text, int
     const char **items = GuiTextSplit(text, &itemsCount, NULL);
 
     Rectangle boundsOpen = bounds;
-    boundsOpen.height = itemsCount * (bounds.height + GuiGetStyle(DROPDOWNBOX, DROPDOWN_ITEMS_PADDING));
+    boundsOpen.y += bounds.height;
+    boundsOpen.height = (itemsCount-1) * (bounds.height + GuiGetStyle(DROPDOWNBOX, DROPDOWN_ITEMS_PADDING));
     boundsOpen.width = widthBoundsOpen;
 
     Rectangle itemBounds = bounds;
     itemBounds.width = widthBoundsOpen;
+
+    Rectangle boundsAll = bounds;
+    boundsAll.width = boundsOpen.width;
+    boundsAll.height += boundsOpen.height;
 
     bool pressed = false;       // Check mouse button pressed
 
@@ -1278,7 +1283,7 @@ bool GuiDropdownBox(Rectangle bounds, int widthBoundsOpen, const char *text, int
             state = GUI_STATE_PRESSED;
 
             // Check if mouse has been pressed or released outside limits
-            if (!CheckCollisionPointRec(mousePoint, boundsOpen))
+            if (!CheckCollisionPointRec(mousePoint, boundsAll))
             {
                 if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) pressed = true;
             }
